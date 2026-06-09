@@ -1,0 +1,6 @@
+flask
+deep_translator
+langdetect
+nltk
+nrclex
+logging
