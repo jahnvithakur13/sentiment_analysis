@@ -1,1 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SentiVerse — E-Consultation Sentiment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+  <!-- Ambient background blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <!-- Top nav bar -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="brand-dot"></span>
+      <span class="brand-name">SentiVerse</span>
+      <span class="brand-tag">beta</span>
+    </div>
+    <div class="nav-links">
+      <span class="nav-pill active">Analyze</span>
+      <span class="nav-pill">History</span>
+    </div>
+    <div class="nav-status">
+      <span class="status-dot pulse"></span>
+      <span class="status-text">Live</span>
+    </div>
+  </nav>
+
+  <!-- Main layout -->
+  <main class="main-layout">
+
+    <!-- LEFT: Input Panel -->
+    <section class="input-panel">
+      <div class="panel-header">
+        <h1 class="panel-title">how are you <em>actually</em> feeling?</h1>
+        <p class="panel-sub">drop your consultation notes, feedback, or thoughts below — no filter needed fr 💬</p>
+      </div>
+
+      <!-- Language badge -->
+      <div class="lang-badge" id="langBadge">
+        <span class="lang-icon">🌐</span>
+        <span id="langText">auto-detect language</span>
+      </div>
+
+      <!-- Textarea -->
+      <div class="textarea-wrap">
+        <textarea id="comment" placeholder="e.g. 'The doctor was super helpful but the wait was kinda long ngl...'"></textarea>
+        <div class="char-counter"><span id="charCount">0</span> / 500</div>
+      </div>
+
+      <!-- Quick-fill chips -->
+      <div class="chips-label">quick fills ↓</div>
+      <div class="chip-row">
+        <button class="chip" data-text="The consultation was really helpful and the doctor made me feel at ease.">😊 Great visit</button>
+        <button class="chip" data-text="I waited too long and felt like my concerns were dismissed.">😞 Bad experience</button>
+        <button class="chip" data-text="It was okay, nothing special. Average wait time and standard advice.">😐 It was okay</button>
+      </div>
+
+      <!-- Analyze button -->
+      <button id="analyzeBtn" class="analyze-btn">
+        <span class="btn-text">Analyze Vibe</span>
+        <span class="btn-icon">→</span>
+      </button>
+
+      <!-- History list -->
+      <div class="history-section">
+        <div class="history-label">recent checks</div>
+        <div id="historyList" class="history-list">
+          <div class="history-empty">your analyses will show here ✨</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: Results Dashboard -->
+    <section class="results-panel" id="resultsPanel">
+
+      <!-- Idle state -->
+      <div class="idle-state" id="idleState">
+        <div class="idle-emoji">🧠</div>
+        <p class="idle-text">your vibe check dashboard<br>loads up here after analysis</p>
+        <div class="idle-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <!-- Active results (hidden until analysis) -->
+      <div class="results-content hidden" id="resultsContent">
+
+        <!-- Sentiment hero -->
+        <div class="sentiment-hero" id="sentimentHero">
+          <div class="sentiment-emoji" id="resultEmoji">😊</div>
+          <div class="sentiment-info">
+            <div class="sentiment-label">overall vibe</div>
+            <div class="sentiment-value" id="resultSentiment">Positive</div>
+            <div class="sentiment-tone" id="resultTone">Tone: joy</div>
+          </div>
+          <div class="sentiment-score-badge" id="scoreBadge">+0.82</div>
+        </div>
+
+        <!-- Compound score gauge -->
+        <div class="chart-card">
+          <div class="chart-title">sentiment score <span class="chart-tag">compound</span></div>
+          <div class="gauge-container">
+            <canvas id="gaugeChart"></canvas>
+            <div class="gauge-overlay">
+              <div class="gauge-score" id="gaugeScore">0.00</div>
+              <div class="gauge-label">compound</div>
+            </div>
+          </div>
+          <div class="gauge-legend">
+            <span class="leg neg">Negative</span>
+            <span class="leg neu">Neutral</span>
+            <span class="leg pos">Positive</span>
+          </div>
+        </div>
+
+        <!-- VADER breakdown bar chart -->
+        <div class="chart-card">
+          <div class="chart-title">score breakdown <span class="chart-tag">vader</span></div>
+          <canvas id="barChart" height="160"></canvas>
+        </div>
+
+        <!-- Emotion profile -->
+        <div class="chart-card">
+          <div class="chart-title">emotion profile <span class="chart-tag">nrc</span></div>
+          <canvas id="radarChart" height="200"></canvas>
+        </div>
+
+        <!-- Translated text -->
+        <div class="translated-card" id="translatedCard">
+          <div class="translated-label">🔤 analyzed as (en)</div>
+          <div class="translated-text" id="translatedText"></div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Loading overlay -->
+  <div class="loading-overlay hidden" id="loadingOverlay">
+    <div class="loading-card">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">reading the vibes...</div>
+      <div class="loading-sub">hang tight, processing your words 🔍</div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
 
